@@ -23,7 +23,7 @@ class H3ImageModePlugin(WAN2GPPlugin):
     def __init__(self):
         super().__init__()
         self.name = "MiniMax H3 Image Mode"
-        self.version = "1.2.0"
+        self.version = "1.3.0"
         self.description = (
             "Adds WanGP's native Text to Image tab to every MiniMax H3 model. "
             "Generates the shortest possible clip and saves its first frame as "

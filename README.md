@@ -57,7 +57,11 @@ H3 handles large stills far better than it handles long clips.
 
 **Prompt enhancer**. H3 wants its own structured prompt format, and the plugin
 keeps *Write H3 Prompt* available in image mode (WanGP would otherwise filter it
-out as video-only). Strongly recommended. For control-image editing, start the
+out as video-only) and points the `image_*` instruction keys at H3's `video_*`
+ones. Without that alias the *Text + First Reference Image* mode falls through
+to WanGP's generic captioning instructions at 512 tokens, and the enhancer
+returns a short description of the reference image with none of your prompt.
+Strongly recommended. For control-image editing, start the
 prompt with something like *"A still frame shot of…"*.
 
 ## How it works
@@ -95,6 +99,13 @@ returns immediately without touching anything. In image mode it:
 - Keeps a single frame from the decoded `(C, F, H, W)` tensor and drops the
   audio track, so WanGP writes one JPEG instead of five.
 - Loops for batches larger than one.
+
+## If the enhancer already ate your prompt
+
+The enhancer replaces the contents of the prompt box. If you ran it in image
+mode before v1.3.0, your original prompt is gone and was overwritten by a
+caption — re-running the enhancer afterwards, in either mode, just re-enhances
+that caption. Paste your original prompt back before judging the fix.
 
 ## Known limitations
 

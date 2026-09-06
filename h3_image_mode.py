@@ -127,6 +127,7 @@ def patch_model_def(model_def) -> bool:
     )
 
     _patch_prompt_enhancer(model_def)
+    _alias_image_enhancer_instructions(model_def)
 
     model_def[PATCH_FLAG] = True
     return True
@@ -153,6 +154,30 @@ def _patch_prompt_enhancer(model_def) -> None:
         for key, label in labels.items()
     }
     model_def["prompt_enhancer_def"] = patched
+
+
+def _alias_image_enhancer_instructions(model_def) -> None:
+    """Point the image_* enhancer keys at H3's video_* ones.
+
+    resolve_prompt_enhancer_settings() looks up
+    "{image|video}_prompt_enhancer_instructions" from the model definition.
+    The H3 handler only declares the text_* and video_* variants, so in image
+    mode WanGP finds nothing and falls back to its generic instructions - and
+    because the "TI" mode contains an "I", the fallback to H3's own text
+    instructions is skipped too.  The enhancer then just captions the first
+    reference image and discards the user's prompt.
+
+    Aliasing keeps H3's own system prompts in play.  They are written for video
+    output, which is what we want anyway: the generation really is a (very
+    short) video, and the recommended prompt style is to open with something
+    like "A still frame shot of...".
+    """
+    for suffix in ("instructions", "max_tokens"):
+        prefix = f"video_prompt_enhancer_{suffix}"
+        for key in [k for k in model_def if k.startswith(prefix)]:
+            image_key = "image" + key[len("video"):]
+            if image_key not in model_def:
+                model_def[image_key] = model_def[key]
 
 
 def patch_all_model_defs(models_def) -> int:

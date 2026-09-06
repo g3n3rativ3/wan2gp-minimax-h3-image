@@ -1,7 +1,7 @@
 {
   "name": "MiniMax H3 Image Mode",
   "author": "community",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Turns MiniMax H3 into a still-image generator. Adds WanGP's native Text to Image tab to every H3 model (FL2VA, Ref2VA, Pruned and PDD variants), runs the shortest possible generation and saves a single decoded frame as an image instead of a video.",
   "type": [
     "extension"
